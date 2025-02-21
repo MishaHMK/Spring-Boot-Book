@@ -1,7 +1,7 @@
 package book.project.bookstore;
 
 import book.project.bookstore.model.Book;
-import book.project.bookstore.service.BookServiceImpl;
+import book.project.bookstore.service.BookService;
 import java.math.BigDecimal;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class BookStoreApplication {
 
-    private final BookServiceImpl bookServiceImpl;
+    private final BookService bookService;
 
-    public BookStoreApplication(BookServiceImpl bookServiceImpl) {
-        this.bookServiceImpl = bookServiceImpl;
+    public BookStoreApplication(BookService bookService) {
+        this.bookService = bookService;
     }
 
     public static void main(String[] args) {
@@ -24,15 +24,15 @@ public class BookStoreApplication {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-            Book book1 = new Book();
-            book1.setTitle("Book 1");
-            book1.setAuthor("Author 1");
-            book1.setIsbn("ISBN 1");
-            book1.setPrice(new BigDecimal("100.0"));
+            Book book = new Book();
+            book.setTitle("Book 1");
+            book.setAuthor("Author 1");
+            book.setIsbn("ISBN 1");
+            book.setPrice(new BigDecimal("100.0"));
 
-            bookServiceImpl.save(book1);
+            bookService.save(book);
 
-            System.out.println(bookServiceImpl.findAll());
+            System.out.println(bookService.findAll());
         };
     }
 
