@@ -1,6 +1,7 @@
 package book.project.bookstore.repository;
 
 import book.project.bookstore.exception.DataProcessingException;
+import book.project.bookstore.exception.EntityNotFoundException;
 import book.project.bookstore.model.Book;
 import java.util.List;
 import java.util.Optional;
@@ -48,7 +49,9 @@ public class BookRepositoryImpl implements BookRepository {
     public Optional<Book> findById(Long id) {
         try (Session session = sessionFactory.openSession()) {
             Book book = session.find(Book.class, id);
-            return book != null ? Optional.of(book) : Optional.empty();
+            return Optional.ofNullable(book);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Can't find book by id" + id);
         }
     }
 }
