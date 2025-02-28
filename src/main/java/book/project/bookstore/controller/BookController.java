@@ -3,6 +3,7 @@ package book.project.bookstore.controller;
 import book.project.bookstore.dto.BookDto;
 import book.project.bookstore.dto.CreateBookRequestDto;
 import book.project.bookstore.dto.UpdateBookRequestDto;
+import book.project.bookstore.repository.book.BookSearchParameters;
 import book.project.bookstore.service.BookService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -10,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -49,5 +51,10 @@ public class BookController {
     @DeleteMapping("/{id}")
     public void deleteBookById(@PathVariable Long id) {
         bookService.deleteById(id);
+    }
+
+    @GetMapping("/search")
+    public List<BookDto> search(@ModelAttribute BookSearchParameters searchParameters) {
+        return bookService.search(searchParameters);
     }
 }
