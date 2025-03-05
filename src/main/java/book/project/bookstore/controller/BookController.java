@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,9 +31,9 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
-    @Operation(summary = "Get all book",
+    @Operation(summary = "Get all books",
             description = "Get all books with possible pagination/sorting")
-    public List<BookDto> getAll(Pageable pageable) {
+    public List<BookDto> getAll(@ParameterObject Pageable pageable) {
         return bookService.findAll(pageable);
     }
 
@@ -45,8 +46,8 @@ public class BookController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Get book by id",
-            description = "Get specific book by given id")
+    @Operation(summary = "Create book",
+            description = "Create new book with given book data")
     public BookDto createBook(@Valid @RequestBody CreateBookRequestDto bookDto) {
         return bookService.save(bookDto);
     }
@@ -71,7 +72,8 @@ public class BookController {
     @Operation(summary = "Search books by parameters",
             description = "Get books which correspond with given parameters: "
                     + "titles, authors and pagination/sorting options")
-    public List<BookDto> search(BookSearchParameters searchParameters, Pageable pageable) {
+    public List<BookDto> search(@ParameterObject BookSearchParameters searchParameters,
+                                @ParameterObject Pageable pageable) {
         return bookService.search(searchParameters, pageable);
     }
 }
