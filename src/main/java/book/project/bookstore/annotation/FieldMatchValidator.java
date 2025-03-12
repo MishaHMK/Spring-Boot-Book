@@ -2,6 +2,7 @@ package book.project.bookstore.annotation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import java.util.Objects;
 import org.springframework.beans.BeanWrapperImpl;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
@@ -20,6 +21,6 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
         Object firstValue = new BeanWrapperImpl(value).getPropertyValue(firstField);
         Object secondValue = new BeanWrapperImpl(value).getPropertyValue(secondField);
         
-        return firstValue != null && firstValue.equals(secondValue);
+        return Objects.equals(firstValue, secondValue);
     }
 }
