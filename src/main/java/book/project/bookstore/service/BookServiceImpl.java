@@ -1,8 +1,8 @@
 package book.project.bookstore.service;
 
-import book.project.bookstore.dto.BookDto;
-import book.project.bookstore.dto.CreateBookRequestDto;
-import book.project.bookstore.dto.UpdateBookRequestDto;
+import book.project.bookstore.dto.internal.book.BookDto;
+import book.project.bookstore.dto.internal.book.CreateBookRequestDto;
+import book.project.bookstore.dto.internal.book.UpdateBookRequestDto;
 import book.project.bookstore.exception.EntityNotFoundException;
 import book.project.bookstore.mapper.BookMapper;
 import book.project.bookstore.model.Book;

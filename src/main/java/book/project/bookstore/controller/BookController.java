@@ -1,8 +1,8 @@
 package book.project.bookstore.controller;
 
-import book.project.bookstore.dto.BookDto;
-import book.project.bookstore.dto.CreateBookRequestDto;
-import book.project.bookstore.dto.UpdateBookRequestDto;
+import book.project.bookstore.dto.internal.book.BookDto;
+import book.project.bookstore.dto.internal.book.CreateBookRequestDto;
+import book.project.bookstore.dto.internal.book.UpdateBookRequestDto;
 import book.project.bookstore.repository.book.BookSearchParameters;
 import book.project.bookstore.service.BookService;
 import io.swagger.v3.oas.annotations.Operation;
