@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users-and-roles
+      author: bookstore
+      changes:
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: role
+                  value: "ADMIN"
+
+        - insert:
+            tableName: roles
+            columns:
+              - column:
+                  name: role
+                  value: "USER"
+
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: role_id
+                  value: 1
+
+        - insert:
+            tableName: users_roles
+            columns:
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: role_id
+                  value: 2
