@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "User Management", description = "Endpoints for managing user data")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/auth")
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/register")
+    @PostMapping("/registration")
     @Operation(summary = "Register user",
             description = "Create a new user with provided data")
     public UserResponseDto register(@Valid @RequestBody UserRegistrationRequestDto request) {
