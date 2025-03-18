@@ -13,6 +13,9 @@ import org.hibernate.validator.constraints.Length;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class UserRegistrationRequestDto {
     @NotBlank(message = "Email is required")
+    @Length(min = 8, max = 30,
+            message = "Email size must be between "
+                    + "8 and 30 symbols inclusively")
     @Email(message = "Invalid email format")
     private String email;
     @NotBlank(message = "First name is required")
