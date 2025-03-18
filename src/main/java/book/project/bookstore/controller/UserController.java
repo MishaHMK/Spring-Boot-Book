@@ -1,7 +1,10 @@
 package book.project.bookstore.controller;
 
+import book.project.bookstore.dto.internal.user.UserLoginRequestDto;
+import book.project.bookstore.dto.internal.user.UserLoginResponseDto;
+import book.project.bookstore.dto.internal.user.UserRegisterResponseDto;
 import book.project.bookstore.dto.internal.user.UserRegistrationRequestDto;
-import book.project.bookstore.dto.internal.user.UserResponseDto;
+import book.project.bookstore.security.AuthenticationService;
 import book.project.bookstore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,11 +21,21 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class UserController {
     private final UserService userService;
+    private final AuthenticationService authService;
 
     @PostMapping("/registration")
     @Operation(summary = "Register user",
             description = "Create a new user with provided data")
-    public UserResponseDto register(@Valid @RequestBody UserRegistrationRequestDto request) {
+    public UserRegisterResponseDto register(
+            @Valid @RequestBody UserRegistrationRequestDto request) {
         return userService.register(request);
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Login user",
+            description = "Login with provided data and receive token")
+    public UserLoginResponseDto login(
+            @Valid @RequestBody UserLoginRequestDto requestDto) {
+        return authService.login(requestDto);
     }
 }
