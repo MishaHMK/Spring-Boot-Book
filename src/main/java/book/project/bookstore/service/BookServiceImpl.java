@@ -1,11 +1,13 @@
 package book.project.bookstore.service;
 
 import book.project.bookstore.dto.internal.book.BookDto;
+import book.project.bookstore.dto.internal.book.BookDtoWithoutCategoryIds;
 import book.project.bookstore.dto.internal.book.CreateBookRequestDto;
 import book.project.bookstore.dto.internal.book.UpdateBookRequestDto;
 import book.project.bookstore.exception.EntityNotFoundException;
 import book.project.bookstore.mapper.BookMapper;
 import book.project.bookstore.model.Book;
+import book.project.bookstore.model.Category;
 import book.project.bookstore.repository.book.BookRepository;
 import book.project.bookstore.repository.book.BookSearchParameters;
 import book.project.bookstore.repository.book.BookSpecificationBuilder;
@@ -24,7 +26,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookDto save(CreateBookRequestDto bookRequestDto) {
-        Book book = bookMapper.toBook(bookRequestDto);
+        Book book = bookMapper.toEntity(bookRequestDto);
         return bookMapper.toDto(bookRepository.save(book));
     }
 
@@ -34,6 +36,21 @@ public class BookServiceImpl implements BookService {
                 .stream()
                 .map(bookMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public List<BookDtoWithoutCategoryIds> findByCategoryId(Long id, Pageable pageable) {
+        Category category = new Category();
+        category.setId(id);
+
+        List<BookDtoWithoutCategoryIds> list =
+                bookRepository
+                        .findByCategoriesContaining(category, pageable)
+                .stream()
+                .map(bookMapper::toDtoWithoutCategories)
+                .toList();
+
+        return list;
     }
 
     @Override

@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,4 +26,5 @@ public class UpdateBookRequestDto {
     private BigDecimal price;
     private String description;
     private String coverImage;
+    private Set<Long> categoryIds;
 }
