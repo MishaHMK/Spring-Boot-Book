@@ -110,6 +110,10 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.vesion}</version>
         </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
