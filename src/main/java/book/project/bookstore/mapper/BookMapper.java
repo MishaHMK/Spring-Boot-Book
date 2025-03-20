@@ -13,6 +13,7 @@ import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class}, config = MapperConfig.class)
 public interface BookMapper {
@@ -35,4 +36,14 @@ public interface BookMapper {
     void updateFromDto(UpdateBookRequestDto dto, @MappingTarget Book book);
 
     BookDtoWithoutCategoryIds toDtoWithoutCategories(Book book);
+
+    @Named("bookFromId")
+    default Book bookFromId(Long bookId) {
+        if (bookId == null) {
+            return null;
+        }
+        Book book = new Book();
+        book.setId(bookId);
+        return book;
+    }
 }
