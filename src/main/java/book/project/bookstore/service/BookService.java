@@ -1,6 +1,7 @@
 package book.project.bookstore.service;
 
 import book.project.bookstore.dto.internal.book.BookDto;
+import book.project.bookstore.dto.internal.book.BookDtoWithoutCategoryIds;
 import book.project.bookstore.dto.internal.book.CreateBookRequestDto;
 import book.project.bookstore.dto.internal.book.UpdateBookRequestDto;
 import book.project.bookstore.repository.book.BookSearchParameters;
@@ -11,6 +12,8 @@ public interface BookService {
     BookDto save(CreateBookRequestDto bookRequestDto);
 
     List<BookDto> findAll(Pageable pageable);
+
+    List<BookDtoWithoutCategoryIds> findByCategoryId(Long id, Pageable pageable);
 
     BookDto findById(Long id);
 
