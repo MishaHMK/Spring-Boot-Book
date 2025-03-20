@@ -16,5 +16,4 @@ public interface CategoryService {
     CategoryDto update(Long id, UpdateCategoryRequestDto categoryDto);
 
     void deleteById(Long id);
-
 }
