@@ -31,6 +31,9 @@ public interface BookMapper {
     @Mapping(target = "categories", source = "categoryIds", qualifiedByName = "categoriesByIds")
     Book toEntity(CreateBookRequestDto dto);
 
+    @Mapping(target = "categories", source = "categoryIds", qualifiedByName = "categoriesByIds")
+    Book dtoToEntity(BookDto dto);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "categories", source = "categoryIds", qualifiedByName = "categoriesByIds")
     void updateFromDto(UpdateBookRequestDto dto, @MappingTarget Book book);

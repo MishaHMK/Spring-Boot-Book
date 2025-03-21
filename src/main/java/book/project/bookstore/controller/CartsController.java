@@ -4,11 +4,9 @@ import book.project.bookstore.dto.internal.cart.ShoppingCartDto;
 import book.project.bookstore.dto.internal.cartitem.CartItemDto;
 import book.project.bookstore.dto.internal.cartitem.CreateCartItemDto;
 import book.project.bookstore.dto.internal.cartitem.UpdateCartItemDto;
-import book.project.bookstore.dto.internal.user.UserDto;
 import book.project.bookstore.security.SecurityUtil;
 import book.project.bookstore.service.CartItemService;
 import book.project.bookstore.service.CartService;
-import book.project.bookstore.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -32,16 +30,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class CartsController {
     private final CartService cartService;
     private final CartItemService cartItemService;
-    private final UserService userService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
     @Operation(summary = "Get user cart",
             description = "Get cart of currently authorized user")
     public ShoppingCartDto getCart() {
-        String currentUserName = SecurityUtil.getLoggedInUsername();
-        UserDto user = userService.findByUsername(currentUserName);
-        return cartService.findByUserId(user.id());
+        Long userId = SecurityUtil.getLoggedInUserId();
+        return cartService.findByUserId(userId);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
