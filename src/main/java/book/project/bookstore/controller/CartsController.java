@@ -1,11 +1,9 @@
 package book.project.bookstore.controller;
 
 import book.project.bookstore.dto.internal.cart.ShoppingCartDto;
-import book.project.bookstore.dto.internal.cartitem.CartItemDto;
 import book.project.bookstore.dto.internal.cartitem.CreateCartItemDto;
 import book.project.bookstore.dto.internal.cartitem.UpdateCartItemDto;
 import book.project.bookstore.security.SecurityUtil;
-import book.project.bookstore.service.CartItemService;
 import book.project.bookstore.service.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/cart")
 public class CartsController {
     private final CartService cartService;
-    private final CartItemService cartItemService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
@@ -44,17 +41,17 @@ public class CartsController {
     @PostMapping
     @Operation(summary = "Add item to cart",
             description = "Add book to the shopping cart")
-    public CartItemDto addItem(@Valid @RequestBody CreateCartItemDto itemDto) {
-        return cartItemService.save(itemDto);
+    public ShoppingCartDto addItem(@Valid @RequestBody CreateCartItemDto itemDto) {
+        return cartService.addItemToCart(itemDto);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("cart-items/{cartItemId}")
     @Operation(summary = "Add item to cart",
             description = "Update quantity of a book in the shopping cart")
-    public CartItemDto updateItem(@PathVariable Long cartItemId,
+    public ShoppingCartDto updateItem(@PathVariable Long cartItemId,
                                   @Valid @RequestBody UpdateCartItemDto updateCartItemDto) {
-        return cartItemService.update(cartItemId, updateCartItemDto);
+        return cartService.update(cartItemId, updateCartItemDto);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -63,6 +60,6 @@ public class CartsController {
     @Operation(summary = "Delete cart item by id",
             description = "Remove an item from the shopping cart")
     public void deleteItemById(@PathVariable Long cartItemId) {
-        cartItemService.deleteById(cartItemId);
+        cartService.deleteById(cartItemId);
     }
 }

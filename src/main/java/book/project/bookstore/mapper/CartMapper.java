@@ -11,6 +11,5 @@ public interface CartMapper {
     @Mapping(source = "user.id", target = "userId")
     ShoppingCartDto toDto(ShoppingCart cart);
 
-    @Mapping(target = "user", source = "userId", qualifiedByName = "userFromId")
     ShoppingCart toEntity(ShoppingCartDto dto);
 }

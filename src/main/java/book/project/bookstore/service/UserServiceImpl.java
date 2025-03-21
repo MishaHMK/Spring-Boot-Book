@@ -1,13 +1,10 @@
 package book.project.bookstore.service;
 
-import book.project.bookstore.dto.internal.user.UserDto;
 import book.project.bookstore.dto.internal.user.UserRegisterResponseDto;
 import book.project.bookstore.dto.internal.user.UserRegistrationRequestDto;
-import book.project.bookstore.exception.EntityNotFoundException;
 import book.project.bookstore.exception.RegistrationException;
 import book.project.bookstore.mapper.UserMapper;
 import book.project.bookstore.model.Role;
-import book.project.bookstore.model.ShoppingCart;
 import book.project.bookstore.model.User;
 import book.project.bookstore.repository.cart.CartRepository;
 import book.project.bookstore.repository.role.RoleRepository;
@@ -26,6 +23,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
     private final CartRepository cartRepository;
+    private final CartService cartService;
 
     @Override
     @Transactional
@@ -38,17 +36,7 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role role = roleRepository.findByRole(Role.RoleName.USER);
         user.setRoles(Set.of(role));
-        ShoppingCart cart = new ShoppingCart();
-        cart.setUser(user);
-        cartRepository.save(cart);
+        cartService.createShoppingCartForUser(user);
         return userMapper.toResponse(userRepository.save(user));
-    }
-
-    @Override
-    public UserDto findByUsername(String email) {
-        return userMapper.toUserDto(userRepository.findByEmail(email).orElseThrow(
-                () -> new EntityNotFoundException("User with email " + email
-                        + " not found")
-        ));
     }
 }
