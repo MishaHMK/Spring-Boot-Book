@@ -42,7 +42,8 @@ public class CartsController {
     @Operation(summary = "Add item to cart",
             description = "Add book to the shopping cart")
     public ShoppingCartDto addItem(@Valid @RequestBody CreateCartItemDto itemDto) {
-        return cartService.addItemToCart(itemDto);
+        Long userId = SecurityUtil.getLoggedInUserId();
+        return cartService.addItemToCart(itemDto, userId);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

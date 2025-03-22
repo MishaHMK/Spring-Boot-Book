@@ -12,7 +12,6 @@ import book.project.bookstore.model.ShoppingCart;
 import book.project.bookstore.model.User;
 import book.project.bookstore.repository.cart.CartItemRepository;
 import book.project.bookstore.repository.cart.CartRepository;
-import book.project.bookstore.security.SecurityUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,23 +32,18 @@ public class CartServiceImpl implements CartService {
         ShoppingCart shoppingCart = cartRepository.findByUserId(userId).orElseThrow(
                 () -> new EntityNotFoundException("Cart of user with id " + userId
                         + " wasn't found"));
-
         return cartMapper.toDto(shoppingCart);
     }
 
     @Override
     public void createShoppingCartForUser(User user) {
-        if (user == null) {
-            throw new EntityNotFoundException("User cannot be null");
-        }
         ShoppingCart cart = new ShoppingCart();
         cart.setUser(user);
         cartRepository.save(cart);
     }
 
     @Override
-    public ShoppingCartDto addItemToCart(CreateCartItemDto createCartItemDto) {
-        Long userId = SecurityUtil.getLoggedInUserId();
+    public ShoppingCartDto addItemToCart(CreateCartItemDto createCartItemDto, Long userId) {
         ShoppingCart cart = cartMapper.toEntity(findByUserId(userId));
         Long bookId = createCartItemDto.getBookId();
 
@@ -68,8 +62,7 @@ public class CartServiceImpl implements CartService {
                 });
 
         cartItemRepository.save(cartItem);
-
-        return findByUserId(userId);
+        return cartMapper.toDto(cartItem.getCart());
     }
 
     @Override
@@ -79,7 +72,7 @@ public class CartServiceImpl implements CartService {
                         + cartItemId));
         cartItemMapper.updateFromDto(updateCartItemDto, cartItem);
         cartItemRepository.save(cartItem);
-        return findByUserId(cartItem.getCart().getId());
+        return cartMapper.toDto(cartItem.getCart());
     }
 
     @Override

@@ -8,7 +8,7 @@ import book.project.bookstore.model.User;
 public interface CartService {
     ShoppingCartDto findByUserId(Long userId);
 
-    ShoppingCartDto addItemToCart(CreateCartItemDto createCartItemDto);
+    ShoppingCartDto addItemToCart(CreateCartItemDto createCartItemDto, Long userId);
 
     ShoppingCartDto update(Long cartItemId, UpdateCartItemDto updateCartItemDto);
 
