@@ -13,6 +13,7 @@ import book.project.bookstore.model.User;
 import book.project.bookstore.repository.cart.CartItemRepository;
 import book.project.bookstore.repository.cart.CartRepository;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,26 +44,33 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    public ShoppingCartDto findByCartItemsId(Long cartItemId) {
+        ShoppingCart shoppingCart = cartRepository.findByCartItemsId(cartItemId).orElseThrow(
+                () -> new EntityNotFoundException("Cart of cart item with id " + cartItemId
+                        + " wasn't found"));
+        return cartMapper.toDto(shoppingCart);
+    }
+
+    @Override
     public ShoppingCartDto addItemToCart(CreateCartItemDto createCartItemDto, Long userId) {
-        ShoppingCart cart = cartMapper.toEntity(findByUserId(userId));
+        ShoppingCartDto cart = findByUserId(userId);
         Long bookId = createCartItemDto.getBookId();
-
-        CartItem cartItem = cartItemRepository.findByBookIdAndCartId(bookId, userId)
-                .map(existingItem -> {
-                    cartItemMapper.updateFromDto(
-                            new UpdateCartItemDto(createCartItemDto.getQuantity()),
-                            existingItem);
-                    return existingItem;
-                })
-                .orElseGet(() -> {
-                    CartItem newItem = cartItemMapper.toEntity(createCartItemDto);
-                    newItem.setBook(bookMapper.dtoToEntity(bookService.findById(bookId)));
-                    newItem.setCart(cart);
-                    return newItem;
-                });
-
-        cartItemRepository.save(cartItem);
-        return cartMapper.toDto(cartItem.getCart());
+        Optional<CartItem> cartItem = cartItemRepository.findByBookIdAndCartId(bookId, userId);
+        if (cartItem.isEmpty()) {
+            CartItem newItem = cartItemMapper.createToEntity(createCartItemDto);
+            newItem.setBook(bookMapper.dtoToEntity(bookService.findById(bookId)));
+            newItem.setCart(cartMapper.toEntity(cart));
+            cartItemRepository.save(newItem);
+            cart.cartItems().add(cartItemMapper.toDto(newItem));
+            return cart;
+        } else {
+            CartItem existingItem = cartItem.get();
+            cartItemMapper.updateFromDto(
+                    new UpdateCartItemDto(createCartItemDto.getQuantity()),
+                    existingItem);
+            cartItemRepository.save(existingItem);
+            return cartMapper.toDto(existingItem.getCart());
+        }
     }
 
     @Override
@@ -72,7 +80,8 @@ public class CartServiceImpl implements CartService {
                         + cartItemId));
         cartItemMapper.updateFromDto(updateCartItemDto, cartItem);
         cartItemRepository.save(cartItem);
-        return cartMapper.toDto(cartItem.getCart());
+        System.out.println(cartItem);
+        return findByCartItemsId(cartItem.getId());
     }
 
     @Override
