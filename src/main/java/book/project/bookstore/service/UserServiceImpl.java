@@ -10,6 +10,7 @@ import book.project.bookstore.repository.cart.CartRepository;
 import book.project.bookstore.repository.role.RoleRepository;
 import book.project.bookstore.repository.user.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,8 +36,9 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role role = roleRepository.findByRole(Role.RoleName.USER);
-        user.setRoles(Set.of(role));
+        user.setRoles(new HashSet<>(Set.of(role)));
+        userRepository.save(user);
         cartService.createShoppingCartForUser(user);
-        return userMapper.toResponse(userRepository.save(user));
+        return userMapper.toResponse(user);
     }
 }

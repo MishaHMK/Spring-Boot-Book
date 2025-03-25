@@ -1,4 +1,4 @@
-package book.project.bookstore.security;
+package book.project.bookstore.security.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

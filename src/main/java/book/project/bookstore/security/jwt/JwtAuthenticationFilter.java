@@ -1,5 +1,6 @@
-package book.project.bookstore.security;
+package book.project.bookstore.security.jwt;
 
+import book.project.bookstore.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

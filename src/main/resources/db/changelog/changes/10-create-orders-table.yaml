@@ -1,10 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: create-cart_items-table
+      id: create-orders-table
       author: bookstore
       changes:
         - createTable:
-            tableName: cart_items
+            tableName: orders
             columns:
               - column:
                   name: id
@@ -14,20 +14,28 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: cart_id
+                  name: user_id
                   type: bigint
                   constraints:
                     nullable: false
               - column:
-                  name: book_id
-                  type: bigint
+                  name: status
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
-                  name: quantity
-                  type: integer
+                  name: total
+                  type: decimal
                   constraints:
                     nullable: false
+              - column:
+                  name: shipping_address
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_date
+                  type: datetime2
               - column:
                   name: is_deleted
                   type: boolean
@@ -35,14 +43,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - addForeignKeyConstraint:
-                  baseColumnNames: cart_id
-                  baseTableName: cart_items
-                  constraintName: fk_cart_items_carts
+                  baseColumnNames: user_id
+                  baseTableName: orders
+                  constraintName: fk_orders_users
                   referencedColumnNames: id
-                  referencedTableName: carts
-              - addForeignKeyConstraint:
-                  baseColumnNames: book_id
-                  baseTableName: cart_items
-                  constraintName: fk_cart_items_books
-                  referencedColumnNames: id
-                  referencedTableName: books
+                  referencedTableName: users
