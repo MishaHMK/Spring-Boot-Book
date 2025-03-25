@@ -5,7 +5,7 @@ import book.project.bookstore.dto.internal.user.UserLoginResponseDto;
 import book.project.bookstore.dto.internal.user.UserRegisterResponseDto;
 import book.project.bookstore.dto.internal.user.UserRegistrationRequestDto;
 import book.project.bookstore.security.AuthenticationService;
-import book.project.bookstore.service.UserService;
+import book.project.bookstore.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

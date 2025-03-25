@@ -1,4 +1,4 @@
-package book.project.bookstore.service;
+package book.project.bookstore.service.order;
 
 import book.project.bookstore.dto.internal.order.CreateOrderRequestDto;
 import book.project.bookstore.dto.internal.order.OrderDto;

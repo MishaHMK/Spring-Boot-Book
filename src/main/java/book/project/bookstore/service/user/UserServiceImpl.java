@@ -1,4 +1,4 @@
-package book.project.bookstore.service;
+package book.project.bookstore.service.user;
 
 import book.project.bookstore.dto.internal.user.UserRegisterResponseDto;
 import book.project.bookstore.dto.internal.user.UserRegistrationRequestDto;
@@ -9,6 +9,7 @@ import book.project.bookstore.model.User;
 import book.project.bookstore.repository.cart.CartRepository;
 import book.project.bookstore.repository.role.RoleRepository;
 import book.project.bookstore.repository.user.UserRepository;
+import book.project.bookstore.service.cart.CartService;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;

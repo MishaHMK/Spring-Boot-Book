@@ -1,4 +1,4 @@
-package book.project.bookstore.service;
+package book.project.bookstore.service.cart;
 
 import book.project.bookstore.dto.internal.cart.ShoppingCartDto;
 import book.project.bookstore.dto.internal.cartitem.CreateCartItemDto;
@@ -12,6 +12,7 @@ import book.project.bookstore.model.ShoppingCart;
 import book.project.bookstore.model.User;
 import book.project.bookstore.repository.cart.CartItemRepository;
 import book.project.bookstore.repository.cart.CartRepository;
+import book.project.bookstore.service.book.BookService;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
