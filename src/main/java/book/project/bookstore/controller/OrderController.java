@@ -70,7 +70,7 @@ public class OrderController {
     @PatchMapping("{orderId}")
     @Operation(summary = "Change item status",
             description = "Change status for any selected order")
-    public OrderDto getOrderItem(@PathVariable Long orderId,
+    public OrderDto updateOrderStatus(@PathVariable Long orderId,
                                  @Valid @RequestBody
                                  UpdateOrderStatusRequestDto orderItemDto) {
         return orderService.updateItemStatus(orderId, orderItemDto);

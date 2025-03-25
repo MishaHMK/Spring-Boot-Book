@@ -7,7 +7,7 @@ import book.project.bookstore.model.CartItem;
 import book.project.bookstore.model.Order;
 import book.project.bookstore.model.ShoppingCart;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Set;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -21,7 +21,6 @@ public interface OrderMapper {
     OrderDto toDto(Order order);
 
     @Mapping(target = "id", ignore = true)
-    //@Mapping(target = "orderItems", source = "cart.cartItems")
     @Mapping(target = "shippingAddress", source = "orderDto.shippingAddress")
     @Mapping(target = "total", source = "cart.cartItems",
             qualifiedByName = "getTotalPriceForOrder")
@@ -34,7 +33,7 @@ public interface OrderMapper {
 
     @AfterMapping
     default void setCurrentTime(@MappingTarget Order order) {
-        order.setOrderDate(Instant.now());
+        order.setOrderDate(LocalDateTime.now());
     }
 
     @Named("getTotalPriceForOrder")

@@ -17,7 +17,6 @@ import book.project.bookstore.repository.order.OrderRepository;
 import book.project.bookstore.security.SecurityUtil;
 import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +38,7 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.findAllByUserId(userId)
                 .stream()
                 .map(orderMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -51,21 +50,20 @@ public class OrderServiceImpl implements OrderService {
 
         return order.getOrderItems().stream()
                 .map(orderItemMapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
 
     }
 
     @Override
     public OrderItemDto getOrderItemById(Long orderId, Long itemId) {
         Long userId = SecurityUtil.getLoggedInUserId();
-        Order order = findByIdAndUserId(orderId, userId);
-        return order.getOrderItems().stream()
-                .filter(o -> Objects.equals(o.getId(), itemId))
-                .map(orderItemMapper::toDto)
-                .findFirst()
+        OrderItem orderItem = orderItemRepository
+                .findByIdAndOrderIdAndOrderUserId(itemId, orderId, userId)
                 .orElseThrow(() -> new EntityNotFoundException("Item with id + "
                         + itemId + " in order №" + orderId
                         + " for current user wasn't found"));
+
+        return orderItemMapper.toDto(orderItem);
     }
 
     @Override
@@ -73,7 +71,7 @@ public class OrderServiceImpl implements OrderService {
                               UpdateOrderStatusRequestDto updateRequestDto) {
         Long userId = SecurityUtil.getLoggedInUserId();
         Order order = findByIdAndUserId(orderId, userId);
-        order.setStatus(updateRequestDto.getStatus());
+        order.setStatus(Order.StatusName.valueOf(updateRequestDto.getStatus()));
         return orderMapper.toDto(orderRepository.save(order));
     }
 
@@ -84,13 +82,16 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() -> new EntityNotFoundException("Cart for user"
                         + "with id " + userId + " not found"));
 
+        if (cart.getCartItems().isEmpty()) {
+            throw new EntityNotFoundException("Cart is empty. Add some item first.");
+        }
+
         Order order = orderMapper.toCreateReadyOrderFromCart(cart, createRequestDto);
         orderRepository.save(order);
 
         Set<OrderItem> orderItems = cart.getCartItems().stream()
                 .map((CartItem item) ->
-                        orderItemMapper
-                                .toOrderItemFromCartItem(item,
+                        orderItemMapper.toOrderItemFromCartItem(item,
                                         orderMapper.toDto(order)))
                 .collect(Collectors.toSet());
         order.setOrderItems(orderItems);
