@@ -5,12 +5,14 @@ import book.project.bookstore.dto.internal.order.OrderDto;
 import book.project.bookstore.dto.internal.order.UpdateOrderStatusRequestDto;
 import book.project.bookstore.dto.internal.orderitem.OrderItemDto;
 import book.project.bookstore.exception.EntityNotFoundException;
+import book.project.bookstore.exception.OrderProcessingException;
 import book.project.bookstore.mapper.OrderItemMapper;
 import book.project.bookstore.mapper.OrderMapper;
 import book.project.bookstore.model.CartItem;
 import book.project.bookstore.model.Order;
 import book.project.bookstore.model.OrderItem;
 import book.project.bookstore.model.ShoppingCart;
+import book.project.bookstore.repository.cart.CartItemRepository;
 import book.project.bookstore.repository.cart.CartRepository;
 import book.project.bookstore.repository.order.OrderItemRepository;
 import book.project.bookstore.repository.order.OrderRepository;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,27 +34,26 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
     private final OrderItemMapper orderItemMapper;
+    private final CartItemRepository cartItemRepository;
 
     @Override
-    public List<OrderDto> getOrders() {
+    public List<OrderDto> getOrders(Pageable pageable) {
         Long userId = SecurityUtil.getLoggedInUserId();
-        return orderRepository.findAllByUserId(userId)
+        return orderRepository.findAllByUserId(userId, pageable)
                 .stream()
                 .map(orderMapper::toDto)
                 .toList();
     }
 
     @Override
-    public List<OrderItemDto> getOrderItems(Long orderId) {
+    public List<OrderItemDto> getOrderItems(Long orderId, Pageable pageable) {
         Long userId = SecurityUtil.getLoggedInUserId();
-        Order order = orderRepository.findByIdAndUserId(orderId, userId)
-                .orElseThrow(() -> new EntityNotFoundException("Order № + "
-                        + orderId + " for current user wasn't found"));
+        List<OrderItem> orderItems = orderItemRepository
+                .findAllByOrderIdAndOrderUserId(orderId, userId, pageable);
 
-        return order.getOrderItems().stream()
+        return orderItems.stream()
                 .map(orderItemMapper::toDto)
                 .toList();
-
     }
 
     @Override
@@ -81,22 +83,19 @@ public class OrderServiceImpl implements OrderService {
         ShoppingCart cart = cartRepository.findByUserId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Cart for user"
                         + "with id " + userId + " not found"));
-
         if (cart.getCartItems().isEmpty()) {
-            throw new EntityNotFoundException("Cart is empty. Add some item first.");
+            throw new OrderProcessingException("Cart is empty. Add some item first.");
         }
-
         Order order = orderMapper.toCreateReadyOrderFromCart(cart, createRequestDto);
-        orderRepository.save(order);
-
         Set<OrderItem> orderItems = cart.getCartItems().stream()
                 .map((CartItem item) ->
-                        orderItemMapper.toOrderItemFromCartItem(item,
-                                        orderMapper.toDto(order)))
+                        orderItemMapper.toOrderItemFromCartItem(item, order))
                 .collect(Collectors.toSet());
         order.setOrderItems(orderItems);
+        orderRepository.save(order);
 
-        orderItemRepository.saveAll(orderItems);
+        cartItemRepository.deleteAllByCartId(cart.getId());
+
         return orderMapper.toDto(order);
     }
 

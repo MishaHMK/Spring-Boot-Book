@@ -11,6 +11,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,8 +45,8 @@ public class OrderController {
     @GetMapping
     @Operation(summary = "Get all user orders",
             description = "Get all user orders of currently authorized user")
-    public List<OrderDto> getAllOrders() {
-        return orderService.getOrders();
+    public List<OrderDto> getAllOrders(@ParameterObject Pageable pageable) {
+        return orderService.getOrders(pageable);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -52,8 +54,9 @@ public class OrderController {
     @Operation(summary = "Get all items of user order",
             description = "Get all items for selected order "
                     + "of currently authorized user")
-    public List<OrderItemDto> getAllOrders(@PathVariable Long orderId) {
-        return orderService.getOrderItems(orderId);
+    public List<OrderItemDto> getAllOrders(@PathVariable Long orderId,
+                                           @ParameterObject Pageable pageable) {
+        return orderService.getOrderItems(orderId, pageable);
     }
 
     @PreAuthorize("hasRole('ROLE_USER')")

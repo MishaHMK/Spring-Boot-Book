@@ -1,9 +1,9 @@
 package book.project.bookstore.mapper;
 
 import book.project.bookstore.config.MapperConfig;
-import book.project.bookstore.dto.internal.order.OrderDto;
 import book.project.bookstore.dto.internal.orderitem.OrderItemDto;
 import book.project.bookstore.model.CartItem;
+import book.project.bookstore.model.Order;
 import book.project.bookstore.model.OrderItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,5 +15,6 @@ public interface OrderItemMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(source = "item.book.price", target = "price")
-    OrderItem toOrderItemFromCartItem(CartItem item, OrderDto order);
+    @Mapping(source = "item.deleted", target = "deleted")
+    OrderItem toOrderItemFromCartItem(CartItem item, Order order);
 }
