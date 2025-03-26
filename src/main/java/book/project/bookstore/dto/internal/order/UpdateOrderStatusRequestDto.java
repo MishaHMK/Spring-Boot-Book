@@ -1,10 +1,10 @@
 package book.project.bookstore.dto.internal.order;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
 public class UpdateOrderStatusRequestDto {
-    @NotNull(message = "New order status is required")
+    @NotBlank(message = "New order status is required")
     private String status;
 }
