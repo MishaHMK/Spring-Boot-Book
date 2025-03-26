@@ -4,7 +4,7 @@ import book.project.bookstore.dto.internal.cart.ShoppingCartDto;
 import book.project.bookstore.dto.internal.cartitem.CreateCartItemDto;
 import book.project.bookstore.dto.internal.cartitem.UpdateCartItemDto;
 import book.project.bookstore.security.SecurityUtil;
-import book.project.bookstore.service.CartService;
+import book.project.bookstore.service.cart.CartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

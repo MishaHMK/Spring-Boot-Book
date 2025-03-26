@@ -1,4 +1,4 @@
-package book.project.bookstore.service;
+package book.project.bookstore.service.cart;
 
 import book.project.bookstore.dto.internal.cart.ShoppingCartDto;
 import book.project.bookstore.dto.internal.cartitem.CreateCartItemDto;

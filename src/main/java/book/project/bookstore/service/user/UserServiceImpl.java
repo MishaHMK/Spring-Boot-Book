@@ -1,4 +1,4 @@
-package book.project.bookstore.service;
+package book.project.bookstore.service.user;
 
 import book.project.bookstore.dto.internal.user.UserRegisterResponseDto;
 import book.project.bookstore.dto.internal.user.UserRegistrationRequestDto;
@@ -9,7 +9,9 @@ import book.project.bookstore.model.User;
 import book.project.bookstore.repository.cart.CartRepository;
 import book.project.bookstore.repository.role.RoleRepository;
 import book.project.bookstore.repository.user.UserRepository;
+import book.project.bookstore.service.cart.CartService;
 import jakarta.transaction.Transactional;
+import java.util.HashSet;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,8 +37,9 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         Role role = roleRepository.findByRole(Role.RoleName.USER);
-        user.setRoles(Set.of(role));
+        user.setRoles(new HashSet<>(Set.of(role)));
+        userRepository.save(user);
         cartService.createShoppingCartForUser(user);
-        return userMapper.toResponse(userRepository.save(user));
+        return userMapper.toResponse(user);
     }
 }

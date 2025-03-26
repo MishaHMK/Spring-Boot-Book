@@ -4,7 +4,7 @@ import book.project.bookstore.dto.internal.book.BookDto;
 import book.project.bookstore.dto.internal.book.CreateBookRequestDto;
 import book.project.bookstore.dto.internal.book.UpdateBookRequestDto;
 import book.project.bookstore.repository.book.BookSearchParameters;
-import book.project.bookstore.service.BookService;
+import book.project.bookstore.service.book.BookService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

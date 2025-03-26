@@ -1,4 +1,4 @@
-package book.project.bookstore.service;
+package book.project.bookstore.service.category;
 
 import book.project.bookstore.dto.internal.category.CategoryDto;
 import book.project.bookstore.dto.internal.category.CreateCategoryRequestDto;

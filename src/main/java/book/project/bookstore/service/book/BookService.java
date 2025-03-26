@@ -1,4 +1,4 @@
-package book.project.bookstore.service;
+package book.project.bookstore.service.book;
 
 import book.project.bookstore.dto.internal.book.BookDto;
 import book.project.bookstore.dto.internal.book.BookDtoWithoutCategoryIds;
