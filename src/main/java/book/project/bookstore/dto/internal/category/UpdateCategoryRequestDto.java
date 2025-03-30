@@ -3,7 +3,9 @@ package book.project.bookstore.dto.internal.category;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
+@Accessors(chain = true)
 @Data
 public class UpdateCategoryRequestDto {
     @NotBlank(message = "Category name is required")

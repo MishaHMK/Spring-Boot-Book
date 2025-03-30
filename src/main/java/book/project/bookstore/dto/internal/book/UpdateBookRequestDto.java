@@ -9,9 +9,11 @@ import java.math.BigDecimal;
 import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 @Getter
 @Setter
+@Accessors(chain = true)
 public class UpdateBookRequestDto {
     @NotBlank(message = "Title is required")
     @Size(min = 3, max = 30, message = "Title must be at least 3 characters long "
