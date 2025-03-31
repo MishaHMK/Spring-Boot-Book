@@ -62,39 +62,39 @@ public class BookServiceTest {
 
     @BeforeEach
     void setUp() {
-        Category sciFi = new Category()
+        Category sciFiCategory = new Category()
                 .setId(1L)
                 .setName("Science Fiction");
 
-        Category fantasy = new Category()
+        Category fantasyCategory = new Category()
                 .setId(2L)
                 .setName("Fantasy");
 
-        Book book1 = new Book().setId(1L)
+        Book firstBook = new Book().setId(1L)
                 .setTitle("Dune")
                 .setAuthor("Frank Herbert")
                 .setIsbn("1234567890123")
                 .setPrice(BigDecimal.valueOf(15))
-                .setCategories(Set.of(sciFi));
+                .setCategories(Set.of(sciFiCategory));
 
-        Book book2 = new Book()
+        Book secondBook = new Book()
                 .setId(2L)
                 .setTitle("Game of Thrones")
                 .setAuthor("George Martyn")
                 .setIsbn("1234567890124")
                 .setPrice(BigDecimal.valueOf(20))
-                .setCategories(Set.of(fantasy));
+                .setCategories(Set.of(fantasyCategory));
 
-        Book book3 = new Book()
+        Book thirdBook = new Book()
                 .setId(3L)
                 .setTitle("Star Wars")
                 .setAuthor("Timothy Zan")
                 .setIsbn("1234567890125")
                 .setPrice(BigDecimal.valueOf(25))
-                .setCategories((Set.of(sciFi, fantasy)));
+                .setCategories((Set.of(sciFiCategory, fantasyCategory)));
 
-        bookList = List.of(book1, book2, book3);
-        categoryList = List.of(fantasy, sciFi);
+        bookList = List.of(firstBook, secondBook, thirdBook);
+        categoryList = List.of(fantasyCategory, sciFiCategory);
     }
 
     @Test
@@ -117,7 +117,7 @@ public class BookServiceTest {
         assertEquals(expectedBookDtoList.size(), actualList.size());
         assertEquals(expectedBookDtoList, actualList);
 
-        verify(bookRepository, times(1)).findAll(any(Pageable.class));
+        verify(bookRepository).findAll(any(Pageable.class));
     }
 
     @Test
