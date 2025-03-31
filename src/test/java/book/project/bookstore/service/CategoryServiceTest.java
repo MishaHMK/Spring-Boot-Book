@@ -19,6 +19,7 @@ import book.project.bookstore.mapper.CategoryMapper;
 import book.project.bookstore.model.Category;
 import book.project.bookstore.repository.category.CategoryRepository;
 import book.project.bookstore.service.category.CategoryServiceImpl;
+import book.project.bookstore.utils.TestDataUtil;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,13 +47,13 @@ public class CategoryServiceTest {
 
     @BeforeEach
     void setUp() {
-        Category sciFi = new Category();
-        sciFi.setId(1L);
-        sciFi.setName("Science Fiction");
+        Category sciFi = new Category()
+                .setId(1L)
+                .setName("Science Fiction");
 
-        Category fantasy = new Category();
-        fantasy.setId(2L);
-        fantasy.setName("Fantasy");
+        Category fantasy = new Category()
+                .setId(2L)
+                .setName("Fantasy");
 
         categoryList = List.of(fantasy, sciFi);
     }
@@ -85,14 +86,9 @@ public class CategoryServiceTest {
     public void findById_WithValidId_ShouldReturnCategoryDtoList() {
         //Given (Arrange)
         Long validId = 2L;
-        Category category = categoryList.stream()
-                .filter(c -> c.getId().equals(validId))
-                .findFirst()
-                .orElseThrow();
+        Category category = categoryList.get(1);
 
-        CategoryDto expectedDto = new CategoryDto()
-                .setId(validId)
-                .setName(category.getName());
+        CategoryDto expectedDto = TestDataUtil.mapToCategoryDto(category);
 
         when(categoryRepository.findById(validId)).thenReturn(Optional.of(category));
         when(categoryMapper.toDto(category)).thenReturn(expectedDto);
@@ -179,9 +175,7 @@ public class CategoryServiceTest {
     public void update_WithValidIdAndUpdateRequestDto_ShouldReturnBookDto() {
         // Given (Arrange)
         Long validId = 1L;
-        UpdateCategoryRequestDto updateCategoryRequestDto = new UpdateCategoryRequestDto()
-                .setName("Updated Category")
-                .setDescription("Updated Description");
+        UpdateCategoryRequestDto updateCategoryRequestDto = TestDataUtil.updateCategoryRequestDto();
 
         Category categoryToUpdate = categoryList.stream()
                 .filter(b -> b.getId().equals(validId))

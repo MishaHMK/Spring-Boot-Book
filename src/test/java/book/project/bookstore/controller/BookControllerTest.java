@@ -2,6 +2,7 @@ package book.project.bookstore.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,20 +13,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import book.project.bookstore.dto.internal.book.BookDto;
 import book.project.bookstore.dto.internal.book.CreateBookRequestDto;
 import book.project.bookstore.dto.internal.book.UpdateBookRequestDto;
+import book.project.bookstore.utils.TestDataUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
@@ -41,6 +41,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class BookControllerTest {
     protected static MockMvc mockMvc;
 
@@ -101,19 +102,9 @@ public class BookControllerTest {
     @DisplayName("Create a new book")
     void createBook_ValidRequestDto_Success() throws Exception {
         //Given (Arrange)
-        CreateBookRequestDto requestDto = new CreateBookRequestDto()
-                .setTitle("Title")
-                .setAuthor("Author")
-                .setIsbn("1234567890123")
-                .setPrice(BigDecimal.valueOf(14.99))
-                .setCategoryIds(Set.of(1L));
+        CreateBookRequestDto requestDto = TestDataUtil.createBookRequestDto();
 
-        BookDto bookDto = new BookDto()
-                .setTitle(requestDto.getTitle())
-                .setAuthor(requestDto.getAuthor())
-                .setIsbn(requestDto.getIsbn())
-                .setPrice(requestDto.getPrice())
-                .setCategoryIds(requestDto.getCategoryIds());
+        BookDto bookDto = TestDataUtil.mapToBookDto(requestDto);
 
         String jsonRequest = objectMapper.writeValueAsString(requestDto);
 
@@ -130,7 +121,7 @@ public class BookControllerTest {
 
         assertNotNull(actual);
         assertNotNull(actual.getId());
-        EqualsBuilder.reflectionEquals(bookDto, actual, "id");
+        assertTrue(EqualsBuilder.reflectionEquals(bookDto, actual, "id"));
     }
 
     @Test
@@ -138,25 +129,7 @@ public class BookControllerTest {
     @DisplayName("Get all books")
     void getAll_GivenBooks_ShouldReturnAllBooks() throws Exception {
         //Given (Arrange)
-        List<BookDto> expected = new ArrayList<>();
-        expected.add(new BookDto().setId(1L)
-                .setTitle("Sample Book 1")
-                .setAuthor("Author A")
-                .setIsbn("1236567163336")
-                .setPrice(BigDecimal.valueOf(15.99))
-                .setCategoryIds(Set.of(1L)));
-        expected.add(new BookDto().setId(2L)
-                .setTitle("Sample Book 2")
-                .setAuthor("Author B")
-                .setIsbn("1236567163337")
-                .setPrice(BigDecimal.valueOf(24.99))
-                .setCategoryIds(Set.of(2L)));
-        expected.add(new BookDto().setId(3L)
-                .setTitle("Sample Book 3")
-                .setAuthor("Author A")
-                .setIsbn("1236567163338")
-                .setPrice(BigDecimal.valueOf(31.99))
-                .setCategoryIds(Set.of(1L, 2L)));
+        List<BookDto> expected = TestDataUtil.bookDtoList();
 
         //When (Act)
         MvcResult result = mockMvc.perform(get("/books"))
@@ -176,12 +149,7 @@ public class BookControllerTest {
     @DisplayName("Get book by id")
     void getById_ValidId_ShouldReturnBookDto() throws Exception {
         //Given (Arrange)
-        BookDto expected = new BookDto();
-        expected.setId(1L).setTitle("Sample Book 1")
-                .setAuthor("Author A")
-                .setIsbn("1236567163336")
-                .setPrice(BigDecimal.valueOf(15.99))
-                .setCategoryIds(Set.of(1L));
+        BookDto expected = TestDataUtil.bookDto();
 
         //When (Act)
         MvcResult result = mockMvc.perform(get("/books/" + expected.getId())
@@ -218,21 +186,10 @@ public class BookControllerTest {
     @DisplayName("Update book by id")
     void updateBookById_WithValidInput_ReturnsUpdatedBook() throws Exception {
         //Given (Arrange)
-        Long bookId = 1L;
-        UpdateBookRequestDto updateRequestDto = new UpdateBookRequestDto()
-                .setTitle("Updated Book Title")
-                .setAuthor("Author B")
-                .setIsbn("1236567163330")
-                .setPrice(BigDecimal.valueOf(25.99))
-                .setCategoryIds(Set.of(2L));
+        Long bookId = 3L;
+        UpdateBookRequestDto updateRequestDto = TestDataUtil.updateBookRequestDto();
 
-        BookDto expected = new BookDto()
-                .setId(bookId)
-                .setTitle(updateRequestDto.getTitle())
-                .setAuthor(updateRequestDto.getAuthor())
-                .setIsbn(updateRequestDto.getIsbn())
-                .setPrice(updateRequestDto.getPrice())
-                .setCategoryIds(updateRequestDto.getCategoryIds());
+        BookDto expected = TestDataUtil.mapToBookDto(bookId, updateRequestDto);
 
         String jsonRequest = objectMapper.writeValueAsString(updateRequestDto);
 
@@ -240,6 +197,7 @@ public class BookControllerTest {
         MvcResult result = mockMvc.perform(put("/books/" + expected.getId())
                 .content(jsonRequest)
                 .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then (Assert)
@@ -247,7 +205,7 @@ public class BookControllerTest {
                 .getContentAsString(), BookDto.class);
 
         assertNotNull(actual);
-        EqualsBuilder.reflectionEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -255,21 +213,16 @@ public class BookControllerTest {
     @DisplayName("Get books by parameters")
     void search_WithValidInput_ReturnsSelectedList() throws Exception {
         //Given (Arrange)
-        List<BookDto> expected = new ArrayList<>();
-        expected.add(new BookDto().setId(1L).setTitle("Sample Book 1")
-                .setAuthor("Author A")
-                .setIsbn("1236567163336")
-                .setPrice(BigDecimal.valueOf(15.99))
-                .setCategoryIds(Set.of(1L)));
-        expected.add(new BookDto().setId(3L).setTitle("Sample Book 3")
-                .setAuthor("Author A")
-                .setIsbn("1236567163338")
-                .setPrice(BigDecimal.valueOf(31.99))
-                .setCategoryIds(Set.of(1L, 2L)));
+        List<BookDto> list = TestDataUtil.bookDtoList();
+        String authorFilter = "Author A";
+
+        List<BookDto> expected = list.stream()
+                .filter(b -> b.getAuthor().equals(authorFilter))
+                .toList();
 
         //When (Act)
         MvcResult result = mockMvc.perform(get("/books/search")
-                        .param("authors","Author2")
+                        .param("authors",authorFilter)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -279,6 +232,6 @@ public class BookControllerTest {
                 .getContentAsString(), BookDto[].class);
 
         assertNotNull(actual);
-        EqualsBuilder.reflectionEquals(expected, actual);
+        assertEquals(expected, Arrays.asList(actual));
     }
 }

@@ -24,6 +24,7 @@ import book.project.bookstore.repository.book.BookSearchParameters;
 import book.project.bookstore.repository.book.BookSpecificationBuilder;
 import book.project.bookstore.repository.category.CategoryRepository;
 import book.project.bookstore.service.book.BookServiceImpl;
+import book.project.bookstore.utils.TestDataUtil;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
@@ -222,21 +223,8 @@ public class BookServiceTest {
     public void findById_WithValidBookId_ShouldReturnBookDto() {
         //Given (Arrange)
         Long validBookId = 3L;
-        Book book = bookList.stream()
-                .filter(b -> b.getId().equals(validBookId))
-                .findFirst()
-                .orElseThrow();
-
-        Set<Long> categoryIds = book.getCategories().stream()
-                .map(Category::getId)
-                .collect(Collectors.toSet());
-
-        BookDto expectedBookDto = new BookDto()
-                .setId(validBookId)
-                .setTitle(book.getTitle())
-                .setAuthor(book.getAuthor())
-                .setIsbn(book.getIsbn())
-                .setCategoryIds(categoryIds);
+        Book book = TestDataUtil.book(categoryList);
+        BookDto expectedBookDto = TestDataUtil.mapToBookDto(book);
 
         when(bookRepository.findById(validBookId)).thenReturn(Optional.of(book));
         when(bookMapper.toDto(book)).thenReturn(expectedBookDto);
@@ -287,13 +275,8 @@ public class BookServiceTest {
     @DisplayName("Verify update returns BookDto")
     public void update_WithValidIdAndUpdateRequestDto_ShouldReturnBookDto() {
         // Given (Arrange)
-        Long validBookId = 1L;
-        UpdateBookRequestDto updateBookRequestDto = new UpdateBookRequestDto()
-                .setTitle("Updated Book 1")
-                .setAuthor("Updated Author 1")
-                .setIsbn("1234567890129")
-                .setPrice(BigDecimal.valueOf(15))
-                .setCategoryIds(Set.of(1L));
+        Long validBookId = 2L;
+        UpdateBookRequestDto updateBookRequestDto = TestDataUtil.updateBookRequestDto();
 
         Book bookToUpdate = bookList.stream()
                 .filter(b -> b.getId().equals(validBookId))
@@ -315,13 +298,7 @@ public class BookServiceTest {
 
         when(bookRepository.save(bookToUpdate)).thenReturn(bookToUpdate);
 
-        BookDto expectedBookDto = new BookDto()
-                .setId(validBookId)
-                .setTitle(updateBookRequestDto.getTitle())
-                .setAuthor(updateBookRequestDto.getAuthor())
-                .setIsbn(updateBookRequestDto.getIsbn())
-                .setPrice(updateBookRequestDto.getPrice())
-                .setCategoryIds(updateBookRequestDto.getCategoryIds());
+        BookDto expectedBookDto = TestDataUtil.mapToBookDto(validBookId, updateBookRequestDto);
 
         when(bookMapper.toDto(bookToUpdate)).thenReturn(expectedBookDto);
 
@@ -361,29 +338,11 @@ public class BookServiceTest {
     @DisplayName("Verify correct book dto returned using valid book id")
     public void save_WithValidCreateBookRequestDto_ShouldReturnBookDto() {
         //Given (Arrange)
-        CreateBookRequestDto createBookRequestDto = new CreateBookRequestDto()
-                .setTitle("New Book")
-                .setAuthor("Some author")
-                .setIsbn("1234567812345")
-                .setPrice(BigDecimal.valueOf(15))
-                .setCategoryIds(Set.of(1L));
+        CreateBookRequestDto createBookRequestDto = TestDataUtil.createBookRequestDto();
 
-        Book book = new Book()
-                .setTitle(createBookRequestDto.getTitle())
-                .setAuthor(createBookRequestDto.getAuthor())
-                .setIsbn(createBookRequestDto.getIsbn())
-                .setPrice(createBookRequestDto.getPrice())
-                .setCategories(categoryList.stream()
-                    .filter(c -> createBookRequestDto.getCategoryIds().contains(c.getId()))
-                    .collect(Collectors.toSet()));
+        Book book = TestDataUtil.mapToBook(createBookRequestDto, categoryList);
 
-        BookDto expectedBookDto = new BookDto()
-                .setId(book.getId())
-                .setTitle(book.getTitle())
-                .setAuthor(book.getAuthor())
-                .setIsbn(book.getIsbn())
-                .setPrice(book.getPrice())
-                .setCategoryIds(createBookRequestDto.getCategoryIds());
+        BookDto expectedBookDto = TestDataUtil.mapToBookDto(book);
 
         when(bookMapper.toEntity(createBookRequestDto)).thenReturn(book);
         when(bookMapper.toDto(book)).thenReturn(expectedBookDto);

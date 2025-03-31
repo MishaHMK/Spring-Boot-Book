@@ -1,1 +1,1 @@
-DELETE FROM books WHERE title = 'Title'
+DELETE FROM books WHERE title = 'Title';
