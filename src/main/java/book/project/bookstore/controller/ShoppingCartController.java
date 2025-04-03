@@ -4,7 +4,7 @@ import book.project.bookstore.dto.internal.cart.ShoppingCartDto;
 import book.project.bookstore.dto.internal.cartitem.CreateCartItemDto;
 import book.project.bookstore.dto.internal.cartitem.UpdateCartItemDto;
 import book.project.bookstore.security.SecurityUtil;
-import book.project.bookstore.service.cart.CartService;
+import book.project.bookstore.service.cart.ShoppingCartService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,8 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/cart")
-public class CartsController {
-    private final CartService cartService;
+public class ShoppingCartController {
+    private final ShoppingCartService cartService;
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping
@@ -48,7 +48,7 @@ public class CartsController {
 
     @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping("cart-items/{cartItemId}")
-    @Operation(summary = "Add item to cart",
+    @Operation(summary = "Change cart item quantity",
             description = "Update quantity of a book in the shopping cart")
     public ShoppingCartDto updateItem(@PathVariable Long cartItemId,
                                   @Valid @RequestBody UpdateCartItemDto updateCartItemDto) {

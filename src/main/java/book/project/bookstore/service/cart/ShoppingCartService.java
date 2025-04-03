@@ -5,7 +5,7 @@ import book.project.bookstore.dto.internal.cartitem.CreateCartItemDto;
 import book.project.bookstore.dto.internal.cartitem.UpdateCartItemDto;
 import book.project.bookstore.model.User;
 
-public interface CartService {
+public interface ShoppingCartService {
     ShoppingCartDto findByUserId(Long userId);
 
     ShoppingCartDto findByCartItemsId(Long cartItemId);

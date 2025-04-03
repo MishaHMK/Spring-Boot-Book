@@ -6,10 +6,10 @@ import book.project.bookstore.exception.RegistrationException;
 import book.project.bookstore.mapper.UserMapper;
 import book.project.bookstore.model.Role;
 import book.project.bookstore.model.User;
-import book.project.bookstore.repository.cart.CartRepository;
+import book.project.bookstore.repository.cart.ShoppingCartRepository;
 import book.project.bookstore.repository.role.RoleRepository;
 import book.project.bookstore.repository.user.UserRepository;
-import book.project.bookstore.service.cart.CartService;
+import book.project.bookstore.service.cart.ShoppingCartService;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Set;
@@ -24,8 +24,8 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final CartRepository cartRepository;
-    private final CartService cartService;
+    private final ShoppingCartRepository cartRepository;
+    private final ShoppingCartService cartService;
 
     @Override
     @Transactional

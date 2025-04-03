@@ -62,7 +62,7 @@ public class BookControllerTest {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(
                     connection,
-                    new ClassPathResource("database/categories/delete-for-category-tests.sql")
+                    new ClassPathResource("database/delete-all.sql")
             );
             ScriptUtils.executeSqlScript(
                     connection,

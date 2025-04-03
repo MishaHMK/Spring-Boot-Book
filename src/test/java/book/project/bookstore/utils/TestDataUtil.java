@@ -4,11 +4,15 @@ import book.project.bookstore.dto.internal.book.BookDto;
 import book.project.bookstore.dto.internal.book.BookDtoWithoutCategoryIds;
 import book.project.bookstore.dto.internal.book.CreateBookRequestDto;
 import book.project.bookstore.dto.internal.book.UpdateBookRequestDto;
+import book.project.bookstore.dto.internal.cart.ShoppingCartDto;
+import book.project.bookstore.dto.internal.cartitem.CartItemDto;
 import book.project.bookstore.dto.internal.category.CategoryDto;
 import book.project.bookstore.dto.internal.category.CreateCategoryRequestDto;
 import book.project.bookstore.dto.internal.category.UpdateCategoryRequestDto;
 import book.project.bookstore.model.Book;
+import book.project.bookstore.model.CartItem;
 import book.project.bookstore.model.Category;
+import book.project.bookstore.model.ShoppingCart;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -191,5 +195,31 @@ public class TestDataUtil {
                 .setIsbn("1236567163332")
                 .setPrice(BigDecimal.valueOf(12.99)));
         return expected;
+    }
+
+    public static CartItemDto mapToCartItemDto(CartItem cartItem) {
+        return new CartItemDto(cartItem.getId(), cartItem.getBook().getId(),
+                cartItem.getBook().getTitle(), cartItem.getQuantity());
+    }
+
+    public static ShoppingCartDto mapToCartDto(ShoppingCart shoppingCart) {
+        Set<CartItemDto> cartItemDtoSet = shoppingCart.getCartItems().stream()
+                .map(TestDataUtil::mapToCartItemDto)
+                .collect(Collectors.toSet());
+
+        return new ShoppingCartDto(shoppingCart.getId(),
+                shoppingCart.getUser().getId(), cartItemDtoSet);
+    }
+
+    public static CartItemDto mapToCartWithNewItemDto(CartItem cartItem) {
+        return new CartItemDto(cartItem.getId(), cartItem.getBook().getId(),
+                cartItem.getBook().getTitle(), cartItem.getQuantity());
+    }
+
+    public static ShoppingCartDto cartDto() {
+        Set<CartItemDto> cartItemDtoSet = Set.of(
+                new CartItemDto(1L, 1L, "Sample Book 1", 5),
+                new CartItemDto(2L, 2L, "Sample Book 2", 3));
+        return new ShoppingCartDto(1L, 1L, cartItemDtoSet);
     }
 }
