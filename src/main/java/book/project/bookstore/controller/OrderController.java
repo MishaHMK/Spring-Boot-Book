@@ -4,7 +4,7 @@ import book.project.bookstore.dto.internal.order.CreateOrderRequestDto;
 import book.project.bookstore.dto.internal.order.OrderDto;
 import book.project.bookstore.dto.internal.order.UpdateOrderStatusRequestDto;
 import book.project.bookstore.dto.internal.orderitem.OrderItemDto;
-import book.project.bookstore.service.cart.CartService;
+import book.project.bookstore.service.cart.ShoppingCartService;
 import book.project.bookstore.service.order.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
-    private final CartService cartService;
+    private final ShoppingCartService cartService;
     private final OrderService orderService;
 
     @PreAuthorize("hasRole('ROLE_USER')")

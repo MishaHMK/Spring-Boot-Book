@@ -13,7 +13,7 @@ import book.project.bookstore.model.Order;
 import book.project.bookstore.model.OrderItem;
 import book.project.bookstore.model.ShoppingCart;
 import book.project.bookstore.repository.cart.CartItemRepository;
-import book.project.bookstore.repository.cart.CartRepository;
+import book.project.bookstore.repository.cart.ShoppingCartRepository;
 import book.project.bookstore.repository.order.OrderItemRepository;
 import book.project.bookstore.repository.order.OrderRepository;
 import book.project.bookstore.security.SecurityUtil;
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
-    private final CartRepository cartRepository;
+    private final ShoppingCartRepository cartRepository;
     private final OrderItemRepository orderItemRepository;
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;

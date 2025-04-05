@@ -11,7 +11,7 @@ import book.project.bookstore.model.CartItem;
 import book.project.bookstore.model.ShoppingCart;
 import book.project.bookstore.model.User;
 import book.project.bookstore.repository.cart.CartItemRepository;
-import book.project.bookstore.repository.cart.CartRepository;
+import book.project.bookstore.repository.cart.ShoppingCartRepository;
 import book.project.bookstore.service.book.BookService;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
@@ -21,8 +21,8 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CartServiceImpl implements CartService {
-    private final CartRepository cartRepository;
+public class ShoppingCartServiceImpl implements ShoppingCartService {
+    private final ShoppingCartRepository cartRepository;
     private final CartMapper cartMapper;
     private final CartItemRepository cartItemRepository;
     private final CartItemMapper cartItemMapper;
@@ -81,7 +81,6 @@ public class CartServiceImpl implements CartService {
                         + cartItemId));
         cartItemMapper.updateFromDto(updateCartItemDto, cartItem);
         cartItemRepository.save(cartItem);
-        System.out.println(cartItem);
         return findByCartItemsId(cartItem.getId());
     }
 
