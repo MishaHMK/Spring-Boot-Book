@@ -57,7 +57,7 @@ Book Store API provides different operations:
 🔸 The project is also testable through in [Documentation](http://ec2-51-20-55-12.eu-north-1.compute.amazonaws.com/api/swagger-ui/index.html#)
 
 ## :movie_camera: **Video Preview**
-[[Video](https://drive.google.com/drive/u/0/folders/1jerCQ2yfZB28p9DfHGnyk_9NJYN_NqeH)](https://www.loom.com/share/15affb5868194b5898bf1b51154d431f)
+https://www.loom.com/share/15affb5868194b5898bf1b51154d431f
 
 ## :page_facing_up: **Endpoints explanation**
 
